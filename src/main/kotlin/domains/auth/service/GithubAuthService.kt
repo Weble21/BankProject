@@ -1,9 +1,12 @@
 package org.example.domains.auth.service
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import okhttp3.FormBody
 import org.example.common.exception.CustomException
 import org.example.common.exception.ErrorCode
 import org.example.common.httpClient.CallClient
+import org.example.common.json.jsonUtil
 import org.example.config.OAuth2Config
 import org.example.interfaces.OAuth2TokenResponse
 import org.example.interfaces.OAuth2UserResponse
@@ -34,11 +37,44 @@ class GithubAuthService(
 
         val headers = mapOf("Accept" to "application/json")
         val jsonString = httpClient.POST(tokenURL, headers, body)
-        httpClient.POST(tokenURL, headers, body)
+        //jsonString -> json처리
+        val response : GithubTokenResponse = jsonUtil.decodeFromJson(jsonString, GithubTokenResponse.serializer())
 
-        TODO("Not yet implemented")
+        return response
     }
     override fun getUserInfo(accessToken: String): OAuth2UserResponse {
-        TODO("")
+        val headers = mapOf(
+            "Content-Type" to "application/json",
+            "Authorization" to "Bearer $accessToken"
+        )
+
+        val jsonString = httpClient.GET(userInfoURL, headers)
+        val response : GithubUserResponseTemp = jsonUtil.decodeFromJson(jsonString, GithubUserResponseTemp.serializer())
+        return response.toOAuth2UserResponse()
     }
 }
+
+@Serializable
+data class GithubTokenResponse (
+    @SerialName("access_token") override val accessToken:String,
+) : OAuth2TokenResponse
+
+@Serializable
+data class GithubUserResponseTemp(
+    val id : Int,
+    val repos_url : String,
+    val name: String
+) {
+    fun toOAuth2UserResponse() = GithubUserResponse (
+        id = id.toString(),
+        email = repos_url,
+        name = name
+    )
+}
+
+@Serializable
+data class GithubUserResponse(
+    override val id : String,
+    override val email : String?,
+    override val name : String?
+) : OAuth2UserResponse
