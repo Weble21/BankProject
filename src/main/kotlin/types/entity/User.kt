@@ -1,4 +1,4 @@
-package types.entity;
+package org.example.types.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
@@ -13,9 +13,6 @@ data class User (
     @Id
     @Column(name = "ulid", length = 12, nullable = false)
     val ulid : String,
-
-    @Column(name = "platform", nullable = false, length = 25)
-    val paltform : String,
 
     @Column(name = "username", nullable = false, unique = true, length = 50)
     val username: String,
