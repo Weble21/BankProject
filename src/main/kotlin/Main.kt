@@ -8,6 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class Application
 
 fun main(args: Array<String>) {
-    println("시작 되었습니다.")
+    println("은행 프로젝트가 시작 되었습니다!.")
     SpringApplication.run(Application::class.java, *args)
 }
