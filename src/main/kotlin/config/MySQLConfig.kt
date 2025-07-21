@@ -11,10 +11,10 @@ import javax.xml.crypto.Data
 
 @Configuration
 class MySQLConfig (
-    @Value("\${database.mysql.url}") val url : String,
-    @Value("\${database.mysql.username}") val username : String,
-    @Value("\${database.mysql.password}") val password : String,
-    @Value("\${database.mysql.driver-class-name}") val driver : String,
+    @Value("\${spring.datasource.url}") val url : String,
+    @Value("\${spring.datasource.username}") val username : String,
+    @Value("\${spring.datasource.password}") val password : String,
+    @Value("\${spring.datasource.driver-class-name}") val driver : String,
 ) {
     @Bean
     fun dataSource() : DataSource {
